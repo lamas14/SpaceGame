@@ -2,71 +2,87 @@ package com.game.source.main;
 
 import java.awt.Graphics;
 import java.util.LinkedList;
+import java.util.Random;
+
+import com.game.source.main.classes.EntityA;
+import com.game.source.main.classes.EntityB;
 
 public class Controller {
 	
-	private LinkedList<Bullet> b = new LinkedList<Bullet>();
-	private LinkedList<Enemy> e = new LinkedList<Enemy>();
+	private LinkedList<EntityA> ea = new LinkedList<EntityA>();
+	private LinkedList<EntityB> eb = new LinkedList<EntityB>();
 	
-	Bullet tempBullet;
-	Enemy tempEnemy;
-	
-	Game game;
+	Random r = new Random();
+	EntityA enta;
+	EntityB entb;
+	//Game game;
 	Textures tex;
 	
-	public Controller(Game game, Textures tex){
-		this.game = game;
+	public Controller(Textures tex){
+		//this.game = game;
 		this.tex = tex;
-		
-		for(int x = 0; x < (Game.WIDTH *Game.SCALE); x+=64){
-			addEnemy(new Enemy(x, 0, tex));
+	}
+	
+	public void createEnemy(int enemy_count){
+		//Creates enemy 	
+		for(int i = 0; i < enemy_count; i++){
+			addEntity(new Enemy(r.nextInt(Game.WIDTH * Game.SCALE),-10,tex));
 		}
 	}
 	
 	public void tick(){
-		for(int i =0; i< b.size(); i++){
-			tempBullet = b.get(i);
+		//A class
+		for(int i = 0; i < ea.size(); i++){
+			enta = ea.get(i);
 			
-			if(tempBullet.getY() < 0)
-				removeBullet(tempBullet);
-			
-			
-			tempBullet.tick();
+			enta.tick();
 		}
-		for(int i =0; i< e.size(); i++){
-			tempEnemy = e.get(i);
+		
+		//B class
+		for(int i = 0; i < eb.size(); i++){
+			entb = eb.get(i);
 			
-			tempEnemy.tick();
+			entb.tick();
 		}
 	}
 	
 	public void render(Graphics g){
-		for(int i =0; i< b.size(); i++){
-			tempBullet = b.get(i);
+		//A Class
+		for(int i = 0; i < ea.size(); i++){
+			enta = ea.get(i);
 			
-			tempBullet.render(g);
+			enta.render(g);
 		}
-		for(int i =0; i< e.size(); i++){
-			tempEnemy = e.get(i);
+		
+		//B Class
+		for(int i = 0; i < eb.size(); i++){
+			entb = eb.get(i);
 			
-			tempEnemy.render(g);
+			entb.render(g);
 		}
 	}
 	
-	public void addBullet(Bullet block){
-		b.add(block);
+	public void addEntity(EntityA block){
+		ea.add(block);
 	}
 	
-	public void removeBullet(Bullet block){
-		b.remove(block);
+	public void removeEntity(EntityA block){
+		ea.remove(block);
 	}
 	
-	public void addEnemy(Enemy block){
-		e.add(block);
+	public void addEntity(EntityB block){
+		eb.add(block);
 	}
 	
-	public void removeEnemy(Bullet block){
-		e.remove(block);
+	public void removeEntity(EntityB block){
+		eb.remove(block);
 	}
 	
+	public LinkedList<EntityA> getEntityA(){
+		return ea;
+	}
+	
+	public LinkedList<EntityB> getEntityB(){
+		return eb;
+	}
 }

@@ -7,8 +7,12 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.LinkedList;
 
 import javax.swing.JFrame;
+
+import com.game.source.main.classes.EntityA;
+import com.game.source.main.classes.EntityB;
 
 public class Game extends Canvas implements Runnable{
 	
@@ -27,9 +31,16 @@ public class Game extends Canvas implements Runnable{
 	
 	private boolean is_shooting = false;	
 	
+	private int enemy_count = 5;
+	private int enemy_killed = 0;
+	
+	
 	private Player p;
 	private Controller c;
 	private Textures tex;
+	
+	public LinkedList<EntityA> ea;
+	public LinkedList<EntityB> eb;
 	
 	public void init(){
 		requestFocus();
@@ -48,7 +59,12 @@ public class Game extends Canvas implements Runnable{
 		//because player and controller use graphics from texture
 		tex = new Textures(this);
 		p = new Player(200, 200, tex);
-		c = new Controller(this, tex);
+		c = new Controller(tex);
+		
+		ea = c.getEntityA();
+		eb = c.getEntityB();
+		
+		c.createEnemy(enemy_count);
 	}
 	
 	private synchronized void start(){
@@ -148,7 +164,7 @@ public class Game extends Canvas implements Runnable{
 			p.setVelY(-5);
 		}else if(key == KeyEvent.VK_SPACE && !is_shooting){
 			is_shooting = true;
-			c.addBullet(new Bullet(p.getX(),p.getY(), tex));
+			c.addEntity(new Bullet(p.getX(),p.getY(), tex, this));
 		}
 	}
 	
@@ -190,4 +206,24 @@ int key = e.getKeyCode();
 	public BufferedImage getSpriteSheet(){
 		return spriteSheet;
 	}
+	
+	/***********************************
+	 * Getters and Setters
+	 */
+	public int getEnemy_count() {
+		return enemy_count;
+	}
+
+	public void setEnemy_count(int enemy_count) {
+		this.enemy_count = enemy_count;
+	}
+
+	public int getEnemy_killed() {
+		return enemy_killed;
+	}
+
+	public void setEnemy_killed(int enemy_killed) {
+		this.enemy_killed = enemy_killed;
+	}
+
 }
