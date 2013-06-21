@@ -28,6 +28,7 @@ public class Game extends Canvas implements Runnable{
 	
 	
 	public void init(){
+		requestFocus();
 		BufferedImageLoader loader = new BufferedImageLoader();
 		try{
 			
@@ -127,18 +128,28 @@ public class Game extends Canvas implements Runnable{
 		int key = e.getKeyCode();
 		
 		if(key == KeyEvent.VK_RIGHT){
-			p.setX(p.getX() + 5);
+			p.setVelX(5);
 		}else if(key == KeyEvent.VK_LEFT){
-			p.setX(p.getX() - 5);
+			p.setVelX(-5);
 		}else if(key == KeyEvent.VK_DOWN){
-			p.setY(p.getY() + 5);
+			p.setVelY(5);
 		}else if(key == KeyEvent.VK_UP){
-			p.setY(p.getY() - 5);
+			p.setVelY(-5);
 		}
 	}
 	
 	public void keyReleased(KeyEvent e){
+int key = e.getKeyCode();
 		
+		if(key == KeyEvent.VK_RIGHT){
+			p.setVelX(0);
+		}else if(key == KeyEvent.VK_LEFT){
+			p.setVelX(0);
+		}else if(key == KeyEvent.VK_DOWN){
+			p.setVelY(0);
+		}else if(key == KeyEvent.VK_UP){
+			p.setVelY(0);
+		}
 	}
 	
 	
