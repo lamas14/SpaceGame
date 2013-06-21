@@ -23,10 +23,13 @@ public class Game extends Canvas implements Runnable{
 	
 	private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 	private BufferedImage spriteSheet = null;
-
+	private BufferedImage background = null;
+	
+	private boolean is_shooting = false;	
+	
 	private Player p;
 	private Controller c;
-	
+	private Textures tex;
 	
 	public void init(){
 		requestFocus();
@@ -34,15 +37,18 @@ public class Game extends Canvas implements Runnable{
 		try{
 			
 			spriteSheet = loader.loadImage("/sprite_sheet.png");
-			
+			background = loader.loadImage("/background.png");
 		}catch(IOException e){
 			e.printStackTrace();
 		}
 		
 		addKeyListener(new KeyInput(this));
 		
-		p = new Player(200, 200, this);
-		c = new Controller(this);
+		//tex has to come before player and controller
+		//because player and controller use graphics from texture
+		tex = new Textures(this);
+		p = new Player(200, 200, tex);
+		c = new Controller(this, tex);
 	}
 	
 	private synchronized void start(){
@@ -119,6 +125,8 @@ public class Game extends Canvas implements Runnable{
 		///////////////////////////////////////
 		
 		g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+		
+		g.drawImage(background, 0, 0, null);
 	
 		p.render(g);
 		c.render(g);
@@ -138,8 +146,9 @@ public class Game extends Canvas implements Runnable{
 			p.setVelY(5);
 		}else if(key == KeyEvent.VK_UP){
 			p.setVelY(-5);
-		}else if(key == KeyEvent.VK_SPACE){
-			c.addBullet(new Bullet(p.getX(),p.getY(), this));
+		}else if(key == KeyEvent.VK_SPACE && !is_shooting){
+			is_shooting = true;
+			c.addBullet(new Bullet(p.getX(),p.getY(), tex));
 		}
 	}
 	
@@ -154,6 +163,8 @@ int key = e.getKeyCode();
 			p.setVelY(0);
 		}else if(key == KeyEvent.VK_UP){
 			p.setVelY(0);
+		}else if(key == KeyEvent.VK_SPACE){
+			is_shooting = false;
 		}
 	}
 	
