@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 
 import com.game.source.main.classes.EntityA;
+import com.game.source.main.libs.Animation;
 
 public class Player extends GameObject implements EntityA{
 	
@@ -12,9 +13,13 @@ public class Player extends GameObject implements EntityA{
 	
 	private Textures tex;
 	
+	Animation anim;
+	
 	public Player(double x, double y, Textures tex){	
 		super(x, y);
 		this.tex = tex;
+		
+		anim = new Animation(5,tex.player[0],tex.player[1],tex.player[2]);
 	}
 	
 	public void tick(){
@@ -29,10 +34,12 @@ public class Player extends GameObject implements EntityA{
 			y=0;
 		if(y>=480-32)
 			y=480-32;
+		
+		anim.runAnimation();
 	}
 	
 	public void render(Graphics g){
-		g.drawImage(tex.player, (int)x, (int)y, null);
+		anim.drawAnimation(g, x, y, 0);
 	}
 	
 	public Rectangle getBounds(){
