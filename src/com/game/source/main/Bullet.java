@@ -24,9 +24,6 @@ public class Bullet extends GameObject implements EntityA{
 	public void tick(){
 		y-=10;
 		
-		if(Physics.Collision(this, game.eb)){
-			System.out.println("COLLISION DETECTED!");
-		}
 		anim.runAnimation();
 	}
 	

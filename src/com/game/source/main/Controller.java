@@ -17,16 +17,18 @@ public class Controller {
 	EntityB entb;
 	//Game game;
 	Textures tex;
+	private Game game;
 	
-	public Controller(Textures tex){
+	public Controller(Textures tex, Game game){
 		//this.game = game;
 		this.tex = tex;
+		this.game = game;
 	}
 	
 	public void createEnemy(int enemy_count){
 		//Creates enemy 	
 		for(int i = 0; i < enemy_count; i++){
-			addEntity(new Enemy(r.nextInt(Game.WIDTH * Game.SCALE),-10,tex));
+			addEntity(new Enemy(r.nextInt(Game.WIDTH * Game.SCALE),-10,tex, this, game));
 		}
 	}
 	

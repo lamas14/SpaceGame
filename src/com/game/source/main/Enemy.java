@@ -14,12 +14,16 @@ public class Enemy extends GameObject implements EntityB{
 	private Textures tex;
 	
 	Animation anim;
+	private Game game;
+	private Controller c;
 	
 	private int speed = r.nextInt(2) +1;
 	
-	public Enemy(double x, double y, Textures tex){
+	public Enemy(double x, double y, Textures tex, Controller c, Game game){
 		super(x, y);
 		this.tex = tex;
+		this.c = c;
+		this.game = game;
 		anim = new Animation(5, tex.enemy[0], tex.enemy[1], tex.enemy[2]);
 	}
 	
@@ -30,6 +34,11 @@ public class Enemy extends GameObject implements EntityB{
 			speed = r.nextInt(2) +1;
 			y=0;
 			x = r.nextInt(Game.WIDTH * Game.SCALE);
+		}
+		
+		if(Physics.Collision(this, game.ea)){
+			c.removeEntity(this);
+			game.setEnemy_killed(game.getEnemy_killed() +1);
 		}
 		
 		anim.runAnimation();
