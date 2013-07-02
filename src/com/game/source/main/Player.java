@@ -13,11 +13,15 @@ public class Player extends GameObject implements EntityA{
 	
 	private Textures tex;
 	
+	//recently added
+	private Game game;
+	
 	Animation anim;
 	
-	public Player(double x, double y, Textures tex){	
+	public Player(double x, double y, Textures tex, Game game){	
 		super(x, y);
 		this.tex = tex;
+		this.game = game;
 		
 		anim = new Animation(5,tex.player[0],tex.player[1],tex.player[2]);
 	}
@@ -36,6 +40,12 @@ public class Player extends GameObject implements EntityA{
 			y=480-32;
 		
 		anim.runAnimation();
+		
+		
+		//RECENTLY ADDED
+		if(Physics.Collision(this, game.eb)){
+			
+		}
 	}
 	
 	public void render(Graphics g){

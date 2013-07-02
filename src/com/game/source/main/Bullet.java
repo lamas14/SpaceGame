@@ -13,6 +13,7 @@ public class Bullet extends GameObject implements EntityA{
 	private Game game;
 	Animation anim;
 	
+	
 	public Bullet(double x, double y, Textures tex, Game game){
 		super(x, y);
 		this.game = game;

@@ -38,6 +38,11 @@ public class Enemy extends GameObject implements EntityB{
 		
 		if(Physics.Collision(this, game.ea)){
 			c.removeEntity(this);
+			
+			//recently added
+			//removes bullet
+			c.removeEntity(game.ea.get(Physics.getIndex()));
+			
 			game.setEnemy_killed(game.getEnemy_killed() +1);
 		}
 		

@@ -1,7 +1,9 @@
 package com.game.source.main;
 
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
@@ -42,6 +44,10 @@ public class Game extends Canvas implements Runnable{
 	public LinkedList<EntityA> ea;
 	public LinkedList<EntityB> eb;
 	
+	
+	//RECENTLY ADDED
+	private static int level = 1;
+	
 	public void init(){
 		requestFocus();
 		BufferedImageLoader loader = new BufferedImageLoader();
@@ -58,7 +64,10 @@ public class Game extends Canvas implements Runnable{
 		//tex has to come before player and controller
 		//because player and controller use graphics from texture
 		tex = new Textures(this);
-		p = new Player(200, 200, tex);
+		
+		//RECENTLY EDITED
+		p = new Player(200, 200, tex, this);
+		
 		c = new Controller(tex, this);
 		
 		ea = c.getEntityA();
@@ -128,6 +137,7 @@ public class Game extends Canvas implements Runnable{
 		c.tick();
 		
 		if(enemy_killed>=enemy_count){
+			level++;
 			enemy_count += 2;
 			enemy_killed = 0;
 			c.createEnemy(enemy_count);
@@ -149,6 +159,12 @@ public class Game extends Canvas implements Runnable{
 		g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
 		
 		g.drawImage(background, 0, 0, null);
+		
+		//RECENTLY ADDED
+		Font font = new Font("Impact", Font.BOLD, 16);
+		g.setColor(Color.WHITE);
+		g.setFont(font);
+		g.drawString("Level: " + level, 10, 20);
 	
 		p.render(g);
 		c.render(g);
