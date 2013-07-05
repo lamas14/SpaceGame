@@ -28,7 +28,7 @@ public class Controller {
 	public void createEnemy(int enemy_count){
 		//Creates enemy 	
 		for(int i = 0; i < enemy_count; i++){
-			addEntity(new Enemy(r.nextInt(Game.WIDTH * Game.SCALE),-10,tex, this, game));
+			addEntity(new Enemy(r.nextInt((Game.WIDTH * Game.SCALE)-32),-32,tex, this, game));
 		}
 	}
 	
@@ -38,6 +38,11 @@ public class Controller {
 			enta = ea.get(i);
 			
 			enta.tick();
+			
+			//RECENTLY ADDED
+			if(enta.getY()<0){
+				removeEntity(enta);
+			}
 		}
 		
 		//B class
@@ -54,6 +59,7 @@ public class Controller {
 			enta = ea.get(i);
 			
 			enta.render(g);
+			
 		}
 		
 		//B Class

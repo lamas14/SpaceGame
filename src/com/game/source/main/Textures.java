@@ -7,6 +7,7 @@ public class Textures {
 	public BufferedImage[] player = new BufferedImage[3];
 	public BufferedImage[] missile = new BufferedImage[3];
 	public BufferedImage[] enemy = new BufferedImage[3];
+	public BufferedImage[] explosion = new BufferedImage[3];
 	
 	private SpriteSheet ss;
 	
@@ -26,6 +27,8 @@ public class Textures {
 		enemy[0] = ss.grabImage(3, 1, 32, 32);
 		enemy[2] = ss.grabImage(3, 2, 32, 32);
 		enemy[1] = ss.grabImage(3, 3, 32, 32);
-		
+		explosion[0] = ss.grabImage(4, 1, 32, 32);
+		explosion[1] = ss.grabImage(4, 2, 32, 32);
+		explosion[2] = ss.grabImage(4, 3, 32, 32);		
 	}
 }

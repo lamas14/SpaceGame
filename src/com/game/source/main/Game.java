@@ -4,6 +4,7 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
@@ -66,7 +67,7 @@ public class Game extends Canvas implements Runnable{
 		tex = new Textures(this);
 		
 		//RECENTLY EDITED
-		p = new Player(200, 200, tex, this);
+		p = new Player(WIDTH*SCALE >>1, HEIGHT*SCALE - 64, tex, this);
 		
 		c = new Controller(tex, this);
 		
@@ -142,6 +143,11 @@ public class Game extends Canvas implements Runnable{
 			enemy_killed = 0;
 			c.createEnemy(enemy_count);
 		}
+		
+		if(p.getHealth()<0){
+			stop();
+		}
+		
 	}
 	
 	private void render(){
@@ -165,9 +171,18 @@ public class Game extends Canvas implements Runnable{
 		g.setColor(Color.WHITE);
 		g.setFont(font);
 		g.drawString("Level: " + level, 10, 20);
-	
+		g.drawString("Health: " + p.getHealth() + "%", WIDTH*SCALE - 96, 20);
+		
 		p.render(g);
 		c.render(g);
+		
+		//RECENTLY ADDED
+		if(p.getHealth()<=0){
+			g.setFont(new Font("Impact", Font.BOLD, 64));
+			FontMetrics fm = g.getFontMetrics();
+			
+			g.drawString("GAME OVER!", (WIDTH*SCALE-fm.stringWidth("GAME OVER!"))>>1, fm.getAscent() + (HEIGHT*SCALE  - (fm.getAscent() + fm.getDescent()))>>1);
+		}
 		//////////////////////////////////////
 		g.dispose();
 		bs.show();

@@ -15,6 +15,7 @@ public class Player extends GameObject implements EntityA{
 	
 	//recently added
 	private Game game;
+	private static int health = 100;
 	
 	Animation anim;
 	
@@ -32,19 +33,21 @@ public class Player extends GameObject implements EntityA{
 		
 		if(x<=0)
 			x=0;
-		if(x>=640-32)
-			x=640-32;
+		if(x>=((Game.WIDTH * Game.SCALE)-32))
+			x=(Game.WIDTH * Game.SCALE)-32;
 		if(y<=0)
 			y=0;
-		if(y>=480-32)
-			y=480-32;
+		if(y>=((Game.HEIGHT * Game.SCALE)-32))
+			y=(Game.HEIGHT * Game.SCALE)-32;
 		
 		anim.runAnimation();
 		
 		
 		//RECENTLY ADDED
 		if(Physics.Collision(this, game.eb)){
-			
+			if(health >=0){
+				health-=2;
+			}
 		}
 	}
 	
@@ -66,6 +69,11 @@ public class Player extends GameObject implements EntityA{
 	
 	public double getY(){
 		return y;
+	}
+	
+	//RECENTLY ADDED
+	public int getHealth(){
+		return health;
 	}
 	
 	/************************************

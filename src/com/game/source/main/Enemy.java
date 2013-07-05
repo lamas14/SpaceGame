@@ -17,7 +17,7 @@ public class Enemy extends GameObject implements EntityB{
 	private Game game;
 	private Controller c;
 	
-	private int speed = r.nextInt(2) +1;
+	private int speed = r.nextInt(5) +5;
 	
 	public Enemy(double x, double y, Textures tex, Controller c, Game game){
 		super(x, y);
@@ -31,18 +31,16 @@ public class Enemy extends GameObject implements EntityB{
 		y+= speed;
 		
 		if(y>Game.HEIGHT * Game.SCALE){
-			speed = r.nextInt(2) +1;
+			speed = r.nextInt(5) + 5;
 			y=0;
-			x = r.nextInt(Game.WIDTH * Game.SCALE);
+			x = r.nextInt((Game.WIDTH * Game.SCALE)-32);
 		}
 		
 		if(Physics.Collision(this, game.ea)){
 			c.removeEntity(this);
-			
 			//recently added
 			//removes bullet
 			c.removeEntity(game.ea.get(Physics.getIndex()));
-			
 			game.setEnemy_killed(game.getEnemy_killed() +1);
 		}
 		
@@ -54,7 +52,7 @@ public class Enemy extends GameObject implements EntityB{
 	}
 
 	public Rectangle getBounds(){
-		return new Rectangle((int)x, (int)y, 32, 32);
+		return new Rectangle((int)x, (int)y, 23, 23);
 	}
 	
 	public double getX() {

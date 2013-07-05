@@ -23,9 +23,9 @@ public class Physics {
 	public static boolean Collision(EntityB entb, LinkedList<EntityA> enta){	
 		for(int i = 0; i < enta.size(); i++){
 			if(entb.getBounds().intersects(enta.get(i).getBounds())){
+				
 				//recently added
 				index = i;
-				
 				return true;
 			}
 		}

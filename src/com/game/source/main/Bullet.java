@@ -15,7 +15,7 @@ public class Bullet extends GameObject implements EntityA{
 	
 	
 	public Bullet(double x, double y, Textures tex, Game game){
-		super(x, y);
+		super(x, y+32);
 		this.game = game;
 		this.tex = tex;
 		
@@ -29,11 +29,12 @@ public class Bullet extends GameObject implements EntityA{
 	}
 	
 	public void render(Graphics g){
+		//32 makes missile launch more realistic
 		anim.drawAnimation(g, x, y, 0);
 	}
 	
 	public Rectangle getBounds(){
-		return new Rectangle((int)x, (int)y, 32, 32);
+		return new Rectangle((int)x, (int)y, 15, 30);
 	}
 
 	/************************************
