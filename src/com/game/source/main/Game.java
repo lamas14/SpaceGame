@@ -17,79 +17,87 @@ import javax.swing.JFrame;
 import com.game.source.main.classes.EntityA;
 import com.game.source.main.classes.EntityB;
 
-public class Game extends Canvas implements Runnable{
-	
+public class Game extends Canvas implements Runnable {
+
 	private static final long serialVersionUID = 1L;
 	public static final int WIDTH = 320;
-	public static final int HEIGHT = WIDTH/12 *9;
+	public static final int HEIGHT = WIDTH / 12 * 9;
 	public static final int SCALE = 2;
 	public final String TITLE = "2D Space Game";
-	
+
 	private boolean running = false;
 	private Thread thread;
-	
-	private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+
+	private BufferedImage image = new BufferedImage(WIDTH, HEIGHT,
+			BufferedImage.TYPE_INT_RGB);
 	private BufferedImage spriteSheet = null;
 	private BufferedImage background = null;
-	
-	private boolean is_shooting = false;	
-	
+
+	private boolean is_shooting = false;
+
 	private int enemy_count = 5;
 	private int enemy_killed = 0;
-	
-	
+
 	private Player p;
 	private Controller c;
 	private Textures tex;
-	
+	private Menu menu;
+
 	public LinkedList<EntityA> ea;
 	public LinkedList<EntityB> eb;
-	
-	
-	//RECENTLY ADDED
+
+	private enum STATE {
+		MENU, GAME
+	};
+
+	private STATE state = STATE.GAME;
+
+	// RECENTLY ADDED
 	private static int level = 1;
-	
-	public void init(){
+
+	public void init() {
 		requestFocus();
 		BufferedImageLoader loader = new BufferedImageLoader();
-		try{
-			
+		try {
+
 			spriteSheet = loader.loadImage("/sprite_sheet.png");
 			background = loader.loadImage("/background.png");
-		}catch(IOException e){
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		addKeyListener(new KeyInput(this));
-		
-		//tex has to come before player and controller
-		//because player and controller use graphics from texture
+
+		// tex has to come before player and controller
+		// because player and controller use graphics from texture
 		tex = new Textures(this);
-		
-		//RECENTLY EDITED
-		p = new Player(WIDTH*SCALE >>1, HEIGHT*SCALE - 64, tex, this);
-		
+
+		// RECENTLY EDITED
+		p = new Player(WIDTH * SCALE >> 1, HEIGHT * SCALE - 64, tex, this);
+
 		c = new Controller(tex, this);
-		
+
+		menu = new Menu();
+
 		ea = c.getEntityA();
 		eb = c.getEntityB();
-		
+
 		c.createEnemy(enemy_count);
 	}
-	
-	private synchronized void start(){
-		if(running)
+
+	private synchronized void start() {
+		if (running)
 			return;
-		
+
 		running = true;
 		thread = new Thread(this);
-		thread.start();		
+		thread.start();
 	}
-	
-	private synchronized void stop(){
-		if(!running)
+
+	private synchronized void stop() {
+		if (!running)
 			return;
-		
+
 		running = false;
 		try {
 			thread.join();
@@ -98,8 +106,8 @@ public class Game extends Canvas implements Runnable{
 		}
 		System.exit(1);
 	}
-	
-	public void run(){
+
+	public void run() {
 		init();
 		long lastTime = System.nanoTime();
 		final double amountOfTicks = 60.0;
@@ -108,22 +116,22 @@ public class Game extends Canvas implements Runnable{
 		int updates = 0;
 		int frames = 0;
 		long timer = System.currentTimeMillis();
-		
-		while(running){
-			//this is the game loop
+
+		while (running) {
+			// this is the game loop
 			long now = System.nanoTime();
-			delta +=(now - lastTime) / ns;
+			delta += (now - lastTime) / ns;
 			lastTime = now;
-			
-			if(delta>=1){
+
+			if (delta >= 1) {
 				tick();
 				updates++;
 				delta--;
 			}
 			render();
 			frames++;
-			
-			if(System.currentTimeMillis() - timer >1000){
+
+			if (System.currentTimeMillis() - timer > 1000) {
 				timer += 1000;
 				System.out.println(updates + " Ticks, Fps " + frames);
 				updates = 0;
@@ -132,103 +140,114 @@ public class Game extends Canvas implements Runnable{
 		}
 		stop();
 	}
-	
-	private void tick(){
-		p.tick();
-		c.tick();
-		
-		if(enemy_killed>=enemy_count){
+
+	private void tick() {
+		if (state == STATE.GAME) {
+			p.tick();
+			c.tick();
+		}
+
+		if (enemy_killed >= enemy_count) {
 			level++;
 			enemy_count += 2;
 			enemy_killed = 0;
 			c.createEnemy(enemy_count);
 		}
-		
-		if(p.getHealth()<0){
-			stop();
+
+		if (p.getHealth() < 0) {
+			state = STATE.MENU;
 		}
-		
+
 	}
-	
-	private void render(){
-		
+
+	private void render() {
+
 		BufferStrategy bs = this.getBufferStrategy();
-		
-		if(bs == null){
+
+		if (bs == null) {
 			createBufferStrategy(3);
 			return;
 		}
-		
+
 		Graphics g = bs.getDrawGraphics();
-		///////////////////////////////////////
-		
+		// /////////////////////////////////////
+
 		g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
-		
-		g.drawImage(background, 0, 0, null);
-		
-		//RECENTLY ADDED
-		Font font = new Font("Impact", Font.BOLD, 16);
-		g.setColor(Color.WHITE);
-		g.setFont(font);
-		g.drawString("Level: " + level, 10, 20);
-		g.drawString("Health: " + p.getHealth() + "%", WIDTH*SCALE - 96, 20);
-		
-		p.render(g);
-		c.render(g);
-		
-		//RECENTLY ADDED
-		if(p.getHealth()<=0){
-			g.setFont(new Font("Impact", Font.BOLD, 64));
-			FontMetrics fm = g.getFontMetrics();
-			
-			g.drawString("GAME OVER!", (WIDTH*SCALE-fm.stringWidth("GAME OVER!"))>>1, fm.getAscent() + (HEIGHT*SCALE  - (fm.getAscent() + fm.getDescent()))>>1);
+
+		if (state == STATE.GAME) {
+			g.drawImage(background, 0, 0, null);
+
+			// RECENTLY ADDED
+			Font font = new Font("Impact", Font.BOLD, 16);
+			g.setColor(Color.WHITE);
+			g.setFont(font);
+			g.drawString("Level: " + level, 10, 20);
+			g.drawString("Health: " + p.getHealth() + "%", WIDTH * SCALE - 96,
+					20);
+
+			p.render(g);
+			c.render(g);
+		} else if (state == STATE.MENU) {
+			menu.render(g);
 		}
-		//////////////////////////////////////
+
+		// RECENTLY ADDED
+
+		if (p.getHealth() <= 0) {
+			g.setColor(Color.RED);
+			g.setFont(new Font("Impact", Font.BOLD, 42));
+			FontMetrics fm = g.getFontMetrics();
+
+			g.drawString("GAME OVER!", (WIDTH * SCALE - fm.stringWidth("GAME OVER!")) >> 1, 140);
+		}
+
+		// ////////////////////////////////////
 		g.dispose();
 		bs.show();
 	}
-	
-	public void keyPressed(KeyEvent e){
+
+	public void keyPressed(KeyEvent e) {
 		int key = e.getKeyCode();
-		
-		if(key == KeyEvent.VK_RIGHT){
-			p.setVelX(5);
-		}else if(key == KeyEvent.VK_LEFT){
-			p.setVelX(-5);
-		}else if(key == KeyEvent.VK_DOWN){
-			p.setVelY(5);
-		}else if(key == KeyEvent.VK_UP){
-			p.setVelY(-5);
-		}else if(key == KeyEvent.VK_SPACE && !is_shooting){
-			is_shooting = true;
-			c.addEntity(new Bullet(p.getX(),p.getY(), tex, this));
+
+		if (state == STATE.GAME) {
+			if (key == KeyEvent.VK_RIGHT) {
+				p.setVelX(5);
+			} else if (key == KeyEvent.VK_LEFT) {
+				p.setVelX(-5);
+			} else if (key == KeyEvent.VK_DOWN) {
+				p.setVelY(5);
+			} else if (key == KeyEvent.VK_UP) {
+				p.setVelY(-5);
+			} else if (key == KeyEvent.VK_SPACE && !is_shooting) {
+				is_shooting = true;
+				c.addEntity(new Bullet(p.getX(), p.getY(), tex, this));
+			}
 		}
 	}
-	
-	public void keyReleased(KeyEvent e){
-int key = e.getKeyCode();
-		
-		if(key == KeyEvent.VK_RIGHT){
+
+	public void keyReleased(KeyEvent e) {
+		int key = e.getKeyCode();
+
+		if (key == KeyEvent.VK_RIGHT) {
 			p.setVelX(0);
-		}else if(key == KeyEvent.VK_LEFT){
+		} else if (key == KeyEvent.VK_LEFT) {
 			p.setVelX(0);
-		}else if(key == KeyEvent.VK_DOWN){
+		} else if (key == KeyEvent.VK_DOWN) {
 			p.setVelY(0);
-		}else if(key == KeyEvent.VK_UP){
+		} else if (key == KeyEvent.VK_UP) {
 			p.setVelY(0);
-		}else if(key == KeyEvent.VK_SPACE){
+		} else if (key == KeyEvent.VK_SPACE) {
 			is_shooting = false;
 		}
 	}
-	
-	
-	public static void main(String args[]){
+
+	public static void main(String args[]) {
 		Game game = new Game();
-		
+
 		game.setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 		game.setMaximumSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 		game.setMinimumSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
-		
+
 		JFrame frame = new JFrame(game.TITLE);
 		frame.add(game);
 		frame.pack();
@@ -236,14 +255,14 @@ int key = e.getKeyCode();
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
-		
+
 		game.start();
 	}
 
-	public BufferedImage getSpriteSheet(){
+	public BufferedImage getSpriteSheet() {
 		return spriteSheet;
 	}
-	
+
 	/***********************************
 	 * Getters and Setters
 	 */

@@ -11,7 +11,7 @@ public class Player extends GameObject implements EntityA{
 	private double velX = 0;
 	private double velY = 0;
 	
-	private Textures tex;
+	//private Textures tex;
 	
 	//recently added
 	private Game game;
@@ -21,7 +21,7 @@ public class Player extends GameObject implements EntityA{
 	
 	public Player(double x, double y, Textures tex, Game game){	
 		super(x, y);
-		this.tex = tex;
+		//this.tex = tex;
 		this.game = game;
 		
 		anim = new Animation(5,tex.player[0],tex.player[1],tex.player[2]);

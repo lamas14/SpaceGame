@@ -9,15 +9,15 @@ import com.game.source.main.libs.Animation;
 
 public class Bullet extends GameObject implements EntityA{
 	
-	private Textures tex;
-	private Game game;
+	//private Textures tex;
+	//private Game game;
 	Animation anim;
 	
 	
 	public Bullet(double x, double y, Textures tex, Game game){
 		super(x, y+32);
-		this.game = game;
-		this.tex = tex;
+		//this.game = game;
+		//this.tex = tex;
 		
 		anim = new Animation(5, tex.missile[0], tex.missile[1], tex.missile[2]);
 	}

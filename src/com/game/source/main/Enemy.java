@@ -11,7 +11,7 @@ public class Enemy extends GameObject implements EntityB{
 	
 	Random r = new Random();
 	
-	private Textures tex;
+	//private Textures tex;
 	
 	Animation anim;
 	private Game game;
@@ -21,7 +21,7 @@ public class Enemy extends GameObject implements EntityB{
 	
 	public Enemy(double x, double y, Textures tex, Controller c, Game game){
 		super(x, y);
-		this.tex = tex;
+		//this.tex = tex;
 		this.c = c;
 		this.game = game;
 		anim = new Animation(5, tex.enemy[0], tex.enemy[1], tex.enemy[2]);
