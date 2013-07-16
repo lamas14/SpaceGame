@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
+
 public class Menu {
 	
 	public Rectangle playButton = new Rectangle((Game.WIDTH >>1) + 120, 150, 100, 50);

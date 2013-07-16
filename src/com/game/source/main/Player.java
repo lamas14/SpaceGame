@@ -15,7 +15,7 @@ public class Player extends GameObject implements EntityA{
 	
 	//recently added
 	private Game game;
-	private static int health = 100;
+	private int health = 100;
 	
 	Animation anim;
 	
@@ -93,5 +93,10 @@ public class Player extends GameObject implements EntityA{
 	
 	public void setVelY(double velY){
 		this.velY = velY;
+	}
+	
+	//RECENTLY ADDED
+	public void setHealth(int health){
+		this.health =  health;
 	}
 }

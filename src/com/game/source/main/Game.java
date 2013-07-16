@@ -4,7 +4,6 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
@@ -13,6 +12,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import com.game.source.main.classes.EntityA;
 import com.game.source.main.classes.EntityB;
@@ -46,11 +46,11 @@ public class Game extends Canvas implements Runnable {
 	public LinkedList<EntityA> ea;
 	public LinkedList<EntityB> eb;
 
-	private enum STATE {
+	public enum STATE {
 		MENU, GAME
 	};
 
-	private STATE state = STATE.GAME;
+	private STATE state = STATE.MENU;
 
 	// RECENTLY ADDED
 	private static int level = 1;
@@ -67,6 +67,10 @@ public class Game extends Canvas implements Runnable {
 		}
 
 		addKeyListener(new KeyInput(this));
+
+		MouseInput mouse = new MouseInput();
+		addMouseListener(mouse);
+		addMouseMotionListener(mouse);
 
 		// tex has to come before player and controller
 		// because player and controller use graphics from texture
@@ -153,9 +157,34 @@ public class Game extends Canvas implements Runnable {
 			enemy_killed = 0;
 			c.createEnemy(enemy_count);
 		}
-
-		if (p.getHealth() < 0) {
-			state = STATE.MENU;
+		
+		if(state == STATE.MENU){
+			
+			if(MouseInput.getButton()==1 && 
+					MouseInput.getX() > menu.playButton.x && 
+					MouseInput.getX() < menu.playButton.x + menu.playButton.width &&
+					MouseInput.getY() > menu.playButton.y && 
+					MouseInput.getY() < menu.playButton.y + menu.playButton.height){
+				
+				p.setHealth(100);
+				state = STATE.GAME;
+			}
+			
+			if(MouseInput.getButton()==1 && 
+					MouseInput.getX() > menu.helpButton.x && 
+					MouseInput.getX() < menu.helpButton.x + menu.helpButton.width &&
+					MouseInput.getY() > menu.helpButton.y && 
+					MouseInput.getY() < menu.helpButton.y + menu.helpButton.height){
+				
+			}
+			
+			if(MouseInput.getButton()==1 && 
+					MouseInput.getX() > menu.exitButton.x && 
+					MouseInput.getX() < menu.exitButton.x + menu.exitButton.width &&
+					MouseInput.getY() > menu.exitButton.y && 
+					MouseInput.getY() < menu.exitButton.y + menu.exitButton.height){
+				System.exit(1);
+			}
 		}
 
 	}
@@ -192,14 +221,18 @@ public class Game extends Canvas implements Runnable {
 		}
 
 		// RECENTLY ADDED
-
 		if (p.getHealth() <= 0) {
-			g.setColor(Color.RED);
-			g.setFont(new Font("Impact", Font.BOLD, 42));
-			FontMetrics fm = g.getFontMetrics();
-
-			g.drawString("GAME OVER!", (WIDTH * SCALE - fm.stringWidth("GAME OVER!")) >> 1, 140);
+			JOptionPane.showMessageDialog(null , "GAME OVER!");
+			p.setHealth(100);
+			state = STATE.MENU;
 		}
+		/*
+		 * if (p.getHealth() <= 0) { g.setColor(Color.RED); g.setFont(new
+		 * Font("Impact", Font.BOLD, 42)); FontMetrics fm = g.getFontMetrics();
+		 * 
+		 * g.drawString("GAME OVER!", (WIDTH * SCALE -
+		 * fm.stringWidth("GAME OVER!")) >> 1, 140); }
+		 */
 
 		// ////////////////////////////////////
 		g.dispose();
@@ -240,6 +273,9 @@ public class Game extends Canvas implements Runnable {
 			is_shooting = false;
 		}
 	}
+	
+	
+	
 
 	public static void main(String args[]) {
 		Game game = new Game();
@@ -280,6 +316,10 @@ public class Game extends Canvas implements Runnable {
 
 	public void setEnemy_killed(int enemy_killed) {
 		this.enemy_killed = enemy_killed;
+	}
+	
+	public void setState(STATE state){
+		this.state = state;
 	}
 
 }
