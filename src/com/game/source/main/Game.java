@@ -46,7 +46,7 @@ public class Game extends Canvas implements Runnable {
 	public LinkedList<EntityA> ea;
 	public LinkedList<EntityB> eb;
 
-	public enum STATE {
+	private enum STATE {
 		MENU, GAME
 	};
 
@@ -149,13 +149,13 @@ public class Game extends Canvas implements Runnable {
 		if (state == STATE.GAME) {
 			p.tick();
 			c.tick();
-		}
-
-		if (enemy_killed >= enemy_count) {
-			level++;
-			enemy_count += 2;
-			enemy_killed = 0;
-			c.createEnemy(enemy_count);
+			
+			if (enemy_killed >= enemy_count) {
+				level++;
+				enemy_count += 2;
+				enemy_killed = 0;
+				c.createEnemy(enemy_count);
+			}
 		}
 		
 		if(state == STATE.MENU){
@@ -166,6 +166,11 @@ public class Game extends Canvas implements Runnable {
 					MouseInput.getY() > menu.playButton.y && 
 					MouseInput.getY() < menu.playButton.y + menu.playButton.height){
 				
+				level = 1;
+				enemy_count = 5;
+				enemy_killed = 0;
+				c.clearEnemy();
+				c.createEnemy(enemy_count);
 				p.setHealth(100);
 				state = STATE.GAME;
 			}

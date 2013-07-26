@@ -32,6 +32,10 @@ public class Controller {
 		}
 	}
 	
+	public void clearEnemy(){
+		eb.removeAll(eb);
+	}
+	
 	public void tick(){
 		//A class
 		for(int i = 0; i < ea.size(); i++){
@@ -93,4 +97,5 @@ public class Controller {
 	public LinkedList<EntityB> getEntityB(){
 		return eb;
 	}
+	
 }
