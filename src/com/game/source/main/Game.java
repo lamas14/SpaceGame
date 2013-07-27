@@ -24,7 +24,7 @@ public class Game extends Canvas implements Runnable {
 	public static final int HEIGHT = WIDTH / 12 * 9;
 	public static final int SCALE = 2;
 	public final String TITLE = "2D Space Game";
-
+	
 	private boolean running = false;
 	private Thread thread;
 
@@ -37,17 +37,19 @@ public class Game extends Canvas implements Runnable {
 
 	private int enemy_count = 5;
 	private int enemy_killed = 0;
-
+	private int score = 0;
+	
 	private Player p;
 	private Controller c;
 	private Textures tex;
 	private Menu menu;
+	private Help help;
 
 	public LinkedList<EntityA> ea;
 	public LinkedList<EntityB> eb;
 
 	private enum STATE {
-		MENU, GAME
+		MENU, GAME, HELP
 	};
 
 	private STATE state = STATE.MENU;
@@ -60,7 +62,7 @@ public class Game extends Canvas implements Runnable {
 		BufferedImageLoader loader = new BufferedImageLoader();
 		try {
 
-			spriteSheet = loader.loadImage("/sprite_sheet.png");
+			spriteSheet = loader.loadImage("/sprite_sheet2.png");
 			background = loader.loadImage("/background.png");
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -82,7 +84,8 @@ public class Game extends Canvas implements Runnable {
 		c = new Controller(tex, this);
 
 		menu = new Menu();
-
+		help = new Help();
+		
 		ea = c.getEntityA();
 		eb = c.getEntityB();
 
@@ -157,8 +160,7 @@ public class Game extends Canvas implements Runnable {
 				c.createEnemy(enemy_count);
 			}
 		}
-		
-		if(state == STATE.MENU){
+		else if(state == STATE.MENU){
 			
 			if(MouseInput.getButton()==1 && 
 					MouseInput.getX() > menu.playButton.x && 
@@ -180,6 +182,7 @@ public class Game extends Canvas implements Runnable {
 					MouseInput.getX() < menu.helpButton.x + menu.helpButton.width &&
 					MouseInput.getY() > menu.helpButton.y && 
 					MouseInput.getY() < menu.helpButton.y + menu.helpButton.height){
+				state = STATE.HELP;
 				
 			}
 			
@@ -191,7 +194,15 @@ public class Game extends Canvas implements Runnable {
 				System.exit(1);
 			}
 		}
-
+		else if(state == STATE.HELP){
+			if(MouseInput.getButton()==1 && 
+					MouseInput.getX() > help.backButton.x && 
+					MouseInput.getX() < help.backButton.x + help.backButton.width &&
+					MouseInput.getY() > help.backButton.y && 
+					MouseInput.getY() < help.backButton.y + help.backButton.height){
+				state = STATE.MENU;
+			}
+		}
 	}
 
 	private void render() {
@@ -218,11 +229,14 @@ public class Game extends Canvas implements Runnable {
 			g.drawString("Level: " + level, 10, 20);
 			g.drawString("Health: " + p.getHealth() + "%", WIDTH * SCALE - 96,
 					20);
-
+			
+			g.drawString("Score: " + score, 10, HEIGHT*SCALE - 10);
 			p.render(g);
 			c.render(g);
 		} else if (state == STATE.MENU) {
 			menu.render(g);
+		} else if (state == STATE.HELP) {
+			help.render(g);
 		}
 
 		// RECENTLY ADDED
@@ -327,4 +341,11 @@ public class Game extends Canvas implements Runnable {
 		this.state = state;
 	}
 
+	public int getScore(){
+		return score;
+	}
+	
+	public void setScore(int score){
+		this.score = score;
+	}
 }

@@ -12,6 +12,9 @@ public class Controller {
 	private LinkedList<EntityA> ea = new LinkedList<EntityA>();
 	private LinkedList<EntityB> eb = new LinkedList<EntityB>();
 	
+	private int time = 0;
+	public boolean hit = false;
+	public Explosion ex;
 	Random r = new Random();
 	EntityA enta;
 	EntityB entb;
@@ -23,6 +26,7 @@ public class Controller {
 		//this.game = game;
 		this.tex = tex;
 		this.game = game;
+		ex = new Explosion(tex);
 	}
 	
 	public void createEnemy(int enemy_count){
@@ -49,6 +53,9 @@ public class Controller {
 			}
 		}
 		
+		if(hit == true)
+			ex.tick();
+		
 		//B class
 		for(int i = 0; i < eb.size(); i++){
 			entb = eb.get(i);
@@ -66,10 +73,17 @@ public class Controller {
 			
 		}
 		
+		if(hit){
+			ex.render(g);
+			++time;
+			if(time >= 250){
+				hit = false;
+				time = 0;
+			}
+		}
 		//B Class
 		for(int i = 0; i < eb.size(); i++){
 			entb = eb.get(i);
-			
 			entb.render(g);
 		}
 	}

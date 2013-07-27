@@ -23,7 +23,6 @@ public class Menu {
 		
 		Font fnt1 = new Font("Impact", Font.BOLD, 31);
 		g.setFont(fnt1);
-		g.drawString("Play", playButton.x + 19, playButton.y + 35);
 		
 		g.setColor(Color.GRAY);
 		g.fillRect((Game.WIDTH >>1) + 120, 150, 100, 50);

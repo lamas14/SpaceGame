@@ -16,7 +16,6 @@ public class Enemy extends GameObject implements EntityB{
 	Animation anim;
 	private Game game;
 	private Controller c;
-	
 	private int speed = r.nextInt(5) +5;
 	
 	public Enemy(double x, double y, Textures tex, Controller c, Game game){
@@ -24,7 +23,7 @@ public class Enemy extends GameObject implements EntityB{
 		//this.tex = tex;
 		this.c = c;
 		this.game = game;
-		anim = new Animation(5, tex.enemy[0], tex.enemy[1], tex.enemy[2]);
+		anim = new Animation(5, tex.enemy[0], tex.enemy[1], tex.enemy[2]);		
 	}
 	
 	public void tick(){
@@ -37,7 +36,11 @@ public class Enemy extends GameObject implements EntityB{
 		}
 		
 		if(Physics.Collision(this, game.ea)){
+			game.setScore(game.getScore() + 100);
 			c.removeEntity(this);
+			c.ex.setX(x);
+			c.ex.setY(y);
+			c.hit = true;
 			//recently added
 			//removes bullet
 			c.removeEntity(game.ea.get(Physics.getIndex()));

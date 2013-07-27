@@ -34,7 +34,7 @@ public class Bullet extends GameObject implements EntityA{
 	}
 	
 	public Rectangle getBounds(){
-		return new Rectangle((int)x, (int)y, 15, 30);
+		return new Rectangle((int)x, (int)y + 20, 15, 30);
 	}
 
 	/************************************
